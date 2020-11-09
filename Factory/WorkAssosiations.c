@@ -2,85 +2,88 @@
 #include <conio.h>
 #include <stdlib.h>
 
-int Dotry(int i, int* vx, int* vy, int* xy, int* yx, int* array, int size, int* maxRow, int* minCol) {
-	if (vx[i] != 0)
+int Dotry(int curWorker, int* workerAlternate, int* engineAlternate, int* workerToEngine, int* engineToWorker, int* array, int size, int* maxWorkerProductivity,
+	int* minEngineProductivity) {
+	if (workerAlternate[curWorker] != 0)
 		return 0;
-	vx[i] = 1;
-	for (int j = 0; j < size; j++)
-		if (array[i * size + j] - maxRow[i] - minCol[j] == 0)
-			vy[j] = 1;
-	for (int j = 0; j < size; j++)
-		if (array[i * size + j] - maxRow[i] - minCol[j] == 0 && yx[j] == -1) {
-			xy[i] = j;
-			yx[j] = i;
+	workerAlternate[curWorker] = 1;
+	for (int curEngine = 0; curEngine < size; curEngine++)
+		if (array[curWorker * size + curEngine] - maxWorkerProductivity[curWorker] - minEngineProductivity[curEngine] == 0)
+			engineAlternate[curEngine] = 1;
+	for (int curEngine = 0; curEngine < size; curEngine++)
+		if (array[curWorker * size + curEngine] - maxWorkerProductivity[curWorker] - minEngineProductivity[curEngine] == 0 && engineToWorker[curEngine] == -1) {
+			workerToEngine[curWorker] = curEngine;
+			engineToWorker[curEngine] = curWorker;
 			return 1;
 		}
-	for (int j = 0; j < size; j++)
-		if (array[i * size + j] - maxRow[i] - minCol[j] == 0 && Dotry(yx[j], vx, vy, xy, yx, array, size, maxRow, minCol)) {
-			xy[i] = j;
-			yx[j] = i;
+	for (int curEngine = 0; curEngine < size; curEngine++)
+		if (array[curWorker * size + curEngine] - maxWorkerProductivity[curWorker] - minEngineProductivity[curEngine] == 0 && Dotry(engineToWorker[curEngine],
+			workerAlternate, engineAlternate, workerToEngine, engineToWorker, array, size, maxWorkerProductivity, minEngineProductivity)) {
+			workerToEngine[curWorker] = curEngine;
+			engineToWorker[curEngine] = curWorker;
 			return 1;
 		}
 	return 0;
 }
 
 void WorkerSplit(int *array, int size) {
-	int* minCol = malloc(sizeof(int) * size);
-	int* maxRow = malloc(sizeof(int) * size);
-	for (int i = 0; i < size; i++) {
-		minCol[i] = 0;
-		maxRow[i] = 0;
+	int* minEngineProductivity = malloc(sizeof(int) * size);
+	int* maxWorkerProductivity = malloc(sizeof(int) * size);
+	for (int curWorker = 0; curWorker < size; curWorker++) {
+		minEngineProductivity[curWorker] = 0;
+		maxWorkerProductivity[curWorker] = 0;
 	}
-	int maxed = 0;
-	for (int i = 0; i < size; i++)
-		for (int j = 0; j < size; j++) {
-			maxRow[i] = max(maxRow[i], array[i * size + j]);
-			if (maxed < maxRow[i])
-				maxed = maxRow[i];
+	int maxOfArray = 0;
+	for (int curWorker = 0; curWorker < size; curWorker++)
+		for (int curEngine = 0; curEngine < size; curEngine++) {
+			maxWorkerProductivity[curWorker] = max(maxWorkerProductivity[curWorker], array[curWorker * size + curEngine]);
+			if (maxOfArray < maxWorkerProductivity[curWorker])
+				maxOfArray = maxWorkerProductivity[curWorker];
 		}
-	int* xy = malloc(sizeof(int) * size);
-	int* yx = malloc(sizeof(int) * size);
-	for (int i = 0; i < size; i++) {
-		xy[i] = -1;
-		yx[i] = -1;
+	int* workerToEngine = malloc(sizeof(int) * size);
+	int* engineToWorker = malloc(sizeof(int) * size);
+	for (int curWorker = 0; curWorker < size; curWorker++) {
+		workerToEngine[curWorker] = -1;
+		engineToWorker[curWorker] = -1;
 	}
 	for (int c = 0; c < size;) {
-		int* vx = malloc(sizeof(int) * size);
-		int* vy = malloc(sizeof(int) * size);
-		for (int i = 0; i < size; i++) {
-			vx[i] = 0;
-			vy[i] = 0;
+		int* workerAlternate = malloc(sizeof(int) * size);
+		int* engineAlternate = malloc(sizeof(int) * size);
+		for (int curWorker = 0; curWorker < size; curWorker++) {
+			workerAlternate[curWorker] = 0;
+			engineAlternate[curWorker] = 0;
 		}
 		int k = 0;
-		for (int i = 0; i < size; i++) 
-			if (xy[i] == -1 && Dotry(i, vx, vy, xy, yx, array, size, maxRow, minCol) != 0)
+		for (int curWorker = 0; curWorker < size; curWorker++) 
+			if (workerToEngine[curWorker] == -1 && Dotry(curWorker, workerAlternate, engineAlternate, workerToEngine, engineToWorker, array, size, maxWorkerProductivity,
+				minEngineProductivity) != 0)
 				k++;
 		c += k;
 		if (k == 0) {
-			int z = maxed + 1;
-			for (int i = 0; i < size; i++)
-				if (vx[i] != 0)
-					for (int j = 0; j < size; j++)
-						if (vy[j] == 0)
-							z = min(z, maxRow[i] + minCol[j] - array[i * size + j]);
-			for (int i = 0; i < size; i++) {
-				if (vx[i] != 0) maxRow[i] -= z;
-				if (vy[i] != 0) minCol[i] += z;
+			int maxOfArrayPlus1 = maxOfArray + 1;
+			for (int curWorker = 0; curWorker < size; curWorker++)
+				if (workerAlternate[curWorker] != 0)
+					for (int curEngine = 0; curEngine < size; curEngine++)
+						if (engineAlternate[curEngine] == 0)
+							maxOfArrayPlus1 = min(maxOfArrayPlus1, maxWorkerProductivity[curWorker] + minEngineProductivity[curEngine] - array[curWorker * size + curEngine]);
+			for (int curWorker = 0; curWorker < size; curWorker++) {
+				if (workerAlternate[curWorker] != 0) maxWorkerProductivity[curWorker] -= maxOfArrayPlus1;
+				if (engineAlternate[curWorker] != 0) minEngineProductivity[curWorker] += maxOfArrayPlus1;
 			}
 		}
-		free(vx);
-		free(vy);
+		free(workerAlternate);
+		free(engineAlternate);
 	}
 
-	int ans = 0;
-	for (int i = 0; i < size; i++)
-		ans += array[i * size + xy[i]];
-	printf_s("\nMax productivity: %d\n", ans);
-	for (int i = 0; i < size; i++)
-		printf_s("Worker %d is on engine %d\n", i + 1, xy[i]+1);
+	int maxProductivity = 0;
+	for (int curWorker = 0; curWorker < size; curWorker++)
+		maxProductivity += array[curWorker * size + workerToEngine[curWorker]];
+	printf_s("\nMax productivity: %d\n", maxProductivity);
+	for (int curWorker = 0; curWorker < size; curWorker++)
+		printf_s("Worker %d is on engine %d\n", curWorker + 1, workerToEngine[curWorker]+1);
 	free(array);
-	free(minCol);
-	free(maxRow);
-	free(xy);
-	free(yx);
+	free(minEngineProductivity);
+	free(maxWorkerProductivity);
+	free(workerToEngine);
+	free(engineToWorker);
 }
