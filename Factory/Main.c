@@ -2,7 +2,9 @@
 #define MAXED 9
 
 void InfoInput() {
-	int numberOfWorkers = 5, currentNumber;
+	int numberOfWorkers, currentNumber;
+	printf_s("How many workers(engines) are available at the moment?\n");
+	numberOfWorkers = ScanNumber();
 	int* array = malloc(sizeof(int) * numberOfWorkers * numberOfWorkers);
 	printf_s("Matrix of productivity (rows - workers; columns - engines):");
 	for (currentNumber = 0; currentNumber < numberOfWorkers * numberOfWorkers; currentNumber++) {

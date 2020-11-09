@@ -68,6 +68,8 @@ void WorkerSplit(int *array, int size) {
 				if (vy[i] != 0) minCol[i] += z;
 			}
 		}
+		free(vx);
+		free(vy);
 	}
 
 	int ans = 0;
@@ -76,4 +78,9 @@ void WorkerSplit(int *array, int size) {
 	printf_s("\nMax productivity: %d\n", ans);
 	for (int i = 0; i < size; i++)
 		printf_s("Worker %d is on engine %d\n", i + 1, xy[i]+1);
+	free(array);
+	free(minCol);
+	free(maxRow);
+	free(xy);
+	free(yx);
 }
