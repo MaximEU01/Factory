@@ -55,8 +55,8 @@ void WorkerSplit(int *array, int size) {
 		}
 		int k = 0;
 		for (int curWorker = 0; curWorker < size; curWorker++) 
-			if (workerToEngine[curWorker] == -1 && Dotry(curWorker, workerAlternate, engineAlternate, workerToEngine, engineToWorker, array, size, maxWorkerProductivity,
-				minEngineProductivity) != 0)
+			if (workerToEngine[curWorker] == -1 && Dotry(curWorker, workerAlternate, engineAlternate, workerToEngine, engineToWorker,
+				array, size, maxWorkerProductivity, minEngineProductivity) != 0)
 				k++;
 		c += k;
 		if (k == 0) {
@@ -65,7 +65,8 @@ void WorkerSplit(int *array, int size) {
 				if (workerAlternate[curWorker] != 0)
 					for (int curEngine = 0; curEngine < size; curEngine++)
 						if (engineAlternate[curEngine] == 0)
-							maxOfArrayPlus1 = min(maxOfArrayPlus1, maxWorkerProductivity[curWorker] + minEngineProductivity[curEngine] - array[curWorker * size + curEngine]);
+							maxOfArrayPlus1 = min(maxOfArrayPlus1, maxWorkerProductivity[curWorker] + minEngineProductivity[curEngine]
+								- array[curWorker * size + curEngine]);
 			for (int curWorker = 0; curWorker < size; curWorker++) {
 				if (workerAlternate[curWorker] != 0) maxWorkerProductivity[curWorker] -= maxOfArrayPlus1;
 				if (engineAlternate[curWorker] != 0) minEngineProductivity[curWorker] += maxOfArrayPlus1;
