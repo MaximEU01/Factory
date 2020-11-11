@@ -1,14 +1,6 @@
 //Extra function of getting the number
 
-#ifndef Including
-#define Including
-
-#include <stdio.h>
-#include <conio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#endif
+#include "Main.h"
 
 int ScanNumber() {
 	//Initialising the input number

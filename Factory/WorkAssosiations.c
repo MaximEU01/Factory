@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <conio.h>
-#include <stdlib.h>
+#include "Main.h"
 
 int Dotry(int curWorker, int* workerAlternate, int* engineAlternate, int* workerToEngine, int* engineToWorker, int* array, int size, int* maxWorkerProductivity,
 	int* minEngineProductivity) {
@@ -28,7 +26,7 @@ int Dotry(int curWorker, int* workerAlternate, int* engineAlternate, int* worker
 
 void WorkerSplit(int *array, int size) {
 	int* minEngineProductivity = malloc(sizeof(int) * size);
-	int* maxWorkerProductivity = malloc(sizeof(int) * size);
+	int* maxWorkerProductivity = malloc(sizeof(int) * size); //Max power of a worker
 	for (int curWorker = 0; curWorker < size; curWorker++) {
 		minEngineProductivity[curWorker] = 0;
 		maxWorkerProductivity[curWorker] = 0;
@@ -43,15 +41,15 @@ void WorkerSplit(int *array, int size) {
 	int* workerToEngine = malloc(sizeof(int) * size);
 	int* engineToWorker = malloc(sizeof(int) * size);
 	for (int curWorker = 0; curWorker < size; curWorker++) {
-		workerToEngine[curWorker] = -1;
-		engineToWorker[curWorker] = -1;
+		workerToEngine[curWorker] = -1; //Link to an engine
+		engineToWorker[curWorker] = -1; //Link to a worker
 	}
 	for (int c = 0; c < size;) {
 		int* workerAlternate = malloc(sizeof(int) * size);
 		int* engineAlternate = malloc(sizeof(int) * size);
 		for (int curWorker = 0; curWorker < size; curWorker++) {
-			workerAlternate[curWorker] = 0;
-			engineAlternate[curWorker] = 0;
+			workerAlternate[curWorker] = 0; 
+			engineAlternate[curWorker] = 0; 
 		}
 		int k = 0;
 		for (int curWorker = 0; curWorker < size; curWorker++) 

@@ -1,10 +1,9 @@
 #pragma once
-#ifndef Including
-#define Including
+#ifndef INCLUDING
+#define INCLUDING
 
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #endif
