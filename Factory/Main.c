@@ -1,5 +1,19 @@
-#define MINIM 1
-#define MAXED 9
+/*
+
+Description:
+	Given an matrix A of size N*N, consisting of natural numbers (rows are for workers; columns - for engines).
+	Each number shows how efficient the worker is on each engine.
+	Each worker can get to work only on one engine.
+
+Task:
+	Output maximum productivity of workers.
+
+Restrictions:
+	Use graphs/trees.
+
+Author: Maxim Uvarov (mix2013)
+
+*/
 
 void InfoInput() {
 	int numberOfWorkers, currentNumber;
